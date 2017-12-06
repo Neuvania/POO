@@ -199,7 +199,7 @@ public:
                     "zap $nome $nomeGp $msg                       \n"
                     "showChats $nome                              \n"
                     "invite $nomeAdm $nomeUser $nomeChat          \n"
-                    "deleave  $nomeUser $nomeChat                 \n"
+                    "leave  $nomeUser $nomeChat                   \n"
                     "Users                                        \n"
                     "ler  $nomeUser $nomeChat                     \n"
                     "fim                                          \n";
