@@ -102,8 +102,8 @@ public:
     vector<Zap> getUnread(){
         vector <Zap> naolidos;
         int cont = 0;
-        for(auto elem :list_reg){
-            // naolidos.push_back(elem);
+        for(auto elem : list_zap){
+            naolidos.push_back(elem);
             cont++;
             if(cont == unreadCont)
                 break;
@@ -212,7 +212,7 @@ public:
             this->r_Chat.add(ui[2], Chat(ui[2]))->addFirstUser(r_User.get(ui[1]));
         else if(cmd == "showChats")
             return "Chats de " + r_User.get(ui[1])->getId() + ": [ "+ this->r_User.get(ui[1])->getChats() + " ]";
-        else if(md == "fim")
+        else if(cmd == "fim")
             return "fim";
         else if(cmd == "invite"){
             int size = ui.size();
