@@ -212,13 +212,13 @@ public:
             this->r_Chat.add(ui[2], Chat(ui[2]))->addFirstUser(r_User.get(ui[1]));
         else if(cmd == "showChats")
             return "Chats de " + r_User.get(ui[1])->getId() + ": [ "+ this->r_User.get(ui[1])->getChats() + " ]";
-        else if(cmd == "fim")
+        else if(md == "fim")
             return "fim";
         else if(cmd == "invite"){
             int size = ui.size();
             for(int i = 2; i < (size - 1); i++)
                 r_User.get(ui[1])->invite(ui[size - 1], r_User.get(ui[i]));
-        }else if(cmd == "deleave")
+        }else if(cmd == "leave")
             r_User.get(ui[1])->leave(ui[2] );
         else if(cmd == "zap")
             r_User.get(ui[1])->sendZap(join(slice(ui, 3), " "), ui[2]);
