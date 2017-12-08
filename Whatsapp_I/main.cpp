@@ -8,6 +8,7 @@ using namespace std;
 using namespace poo;
 
 class Zap{
+
     string id;
     string Msg;
 public:
@@ -18,10 +19,9 @@ public:
     string getUserId(){
         return this->id;
     }
-    string toString(){
-        return "[ " + id + ": " + Msg + " ]\n";
+    string getMsg(){
+        return "[" +  id + ": " + Msg + "]" ;
     }
-    TO_OSTREAM(Zap)
 };
 
 class Chat;
@@ -40,42 +40,30 @@ public:
     string getChats();
 
     void invite(string chat, User * users);
-    void leave(string nome);
-    void sendZap(string msg, string IdChat);
+    void leave (string nome);
+    void sendZap(string id, string msg, string IdChat);
 
-    string toString(){
-        return id;
-    }
-    TO_OSTREAM(User)
     friend class Chat;
 };
 
 class Registro{
     User * user;
-    int conta{0};
-
 public:
     Registro(User * user = nullptr) {
         this->user = user;
     }
-
-    int getConta(){
-        return this->conta;
+    string getUser(){
+        return user->getId();
     }
-
-    void addConta(int qtd){
-        this->conta += qtd;
-    }
-
 };
-
 class Chat{
-    int unreadCont = 0;
     string id;
     vector<Zap> list_zap;
     map<string, Registro> list_reg;
 
+
 public:
+
     Chat(string chatId = "") {
         this->id = chatId;
     }
@@ -83,8 +71,11 @@ public:
         list_reg[chatCreator->id] = Registro(chatCreator);
         chatCreator->chats.push_back(this);
         return true;
-    }
 
+    }
+    vector<Registro>getLista_reg(){
+        return poo::map_values(list_reg);
+    }
     string getChatId(){
         return id;
     }
@@ -93,23 +84,28 @@ public:
     }
     void deliverZap(Zap  zap){
         list_zap.push_back(Zap(zap));
-        for(auto &elem : list_reg){
-            if(zap.getUserId() != elem.first)
-                elem.second.addConta(1);
+
+    }
+    //retorna os usuarios do gp
+    vector<string>Users(){
+        vector<string>users;
+        for(auto elem : getLista_reg()){
+            users.push_back(elem.getUser());
         }
+        return users;
     }
 
-    vector<Zap> getUnread(){
-        vector <Zap> naolidos;
-        int cont = 0;
-        for(auto elem : list_zap){
-            naolidos.push_back(elem);
-            cont++;
-            if(cont == unreadCont)
-                break;
-        }
-        unreadCont = 0;
-        return naolidos;
+    vector<string> msg(string nomeUser){
+        vector <string> msg;
+        for(auto elem : getLista_reg())
+            if(elem.getUser() == nomeUser){
+                for(auto elem : list_zap){
+                    msg.push_back(elem.getMsg());
+                }
+            }
+            else
+                msg.push_back("você nao possui esse grupo");
+        return msg;
     }
 
     friend class User;
@@ -141,12 +137,13 @@ void User::leave(string nome){
     }
 }
 
-void User::sendZap(string msg, string IdChat){
+void User::sendZap(string id ,string msg, string IdChat){
     for(auto *elem : chats){
         if(IdChat == elem->id){
-            elem->deliverZap(msg);
+            elem->deliverZap(Zap(id,msg));
         }
     }
+
 }
 
 class Controller{
@@ -207,7 +204,7 @@ public:
         else if(cmd == "addUser")
             this->r_User.add(ui[1],User(ui[1]));
         else if(cmd == "Users")
-            return "Usuarios\n[ " +join(this->r_User.keys(),", ") + "]";
+            return  poo::join(r_Chat.get(ui[1])->Users(), "\n");
         else if(cmd == "newChat")
             this->r_Chat.add(ui[2], Chat(ui[2]))->addFirstUser(r_User.get(ui[1]));
         else if(cmd == "showChats")
@@ -220,18 +217,18 @@ public:
                 r_User.get(ui[1])->invite(ui[size - 1], r_User.get(ui[i]));
         }else if(cmd == "leave")
             r_User.get(ui[1])->leave(ui[2] );
-        else if(cmd == "zap")
-            r_User.get(ui[1])->sendZap(join(slice(ui, 3), " "), ui[2]);
-        else if(cmd == "ler"){
 
+        else if(cmd == "zap")
+            r_User.get(ui[1])->sendZap(ui[1],join(slice(ui, 3), " "), ui[2]);
+
+        else if(cmd == "ler"){
+            return  r_User.get(ui[1]) ,  poo::join(r_Chat.get(ui[2])->msg(ui[1]), "\n");
         }
+
         else
             return "Comando inválido";
         return "Done";
-
-
     }
-
 
 };
 
