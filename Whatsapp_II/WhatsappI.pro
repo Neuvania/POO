@@ -1,0 +1,13 @@
+TEMPLATE = app
+CONFIG += console c++11
+CONFIG -= app_bundle
+CONFIG -= qt
+
+SOURCES += main.cpp
+
+HEADERS += \
+    repository.h \
+    poo_aux.h \
+    classes.h \
+    whatservice.h
+

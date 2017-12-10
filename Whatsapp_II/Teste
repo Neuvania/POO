@@ -1,0 +1,15 @@
+addUser jose
+addUser maria
+newTalk jose maria
+showChats maria
+zap jose josemaria oi
+ler maria josemaria
+leave maria josemaria
+addUser joao
+newGroup joao familia
+invite joao maria familia
+invite maria jose familia
+showChats joao
+zap joao familia oi familia
+leave jose familia
+Users familia
